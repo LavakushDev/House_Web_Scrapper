@@ -1,2 +1,2 @@
-print("Starting Web Scraper")
-print("Starting Web Scraper")
+import requests
+from bs4 import BeautifulSoup
