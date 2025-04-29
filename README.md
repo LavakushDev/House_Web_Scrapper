@@ -33,15 +33,13 @@ DB_DATABASE: your_database_name
 **dependencies**:
 
 mysql-connector-python
-
 python-dotenv
+requests
+bs4
 
-⚡ Install all the required dependencies using:
+Install all the required dependencies using:
 
-bash
-Copy
-Edit
-pip install -r requirements.txt
+bash: pip install -r requirements.txt
 
 **instructions**:
 
