@@ -4,12 +4,13 @@ import time
 import re
 import mysql.connector
 
-base_url = "https://reiwa.com.au/for-sale/broadwood+karlkurla+binduli+hannans+kalgoorlie+boulder+fimiston+south-boulder+victory-heights/?includesurroundingsuburbs=true&sortby=default&page="
+
+base_url = "https://reiwa.com.au/for-sale/broadwood+karlkurla+binduli+hannans+kalgoorlie+boulder+fimiston+south-boulder+victory-heights/?includesurroundingsuburbs=true&sortby=listdate&page="
 headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
         }
 
-for page in range(1, 3):
+for page in range(1, 25):
     url = base_url + str(page)
     print(f"Scraping page {page}...")
 
@@ -23,8 +24,6 @@ for page in range(1, 3):
             if (property_cards == []):
                 break
             
-            
-
             for card in property_cards:
                 href = card.get('href')
                 price_tag = card.find('p', class_='heading h4 sk-item')
@@ -54,13 +53,19 @@ for page in range(1, 3):
 
                         cursor = conn.cursor()
 
-                        sql = "INSERT INTO Houses_List (address, house_id, price, web_url) VALUES (%s, %s, %s, %s)"
-                        values = (address, address_id, price, full_link)
+                        cursor.execute("Select * from Houses_List where house_id="+address_id)
 
-                        cursor.execute(sql, values)
-                        conn.commit()
+                        result = cursor.fetchone()
+                        
+                        if result:
+                            print(f"House with ID {address_id} already exists.")
+                        else:
+                            sql = "INSERT INTO Houses_List (address, house_id, price, web_url) VALUES (%s, %s, %s, %s)"
+                            values = (address, address_id, price, full_link)
 
-                        print(cursor.rowcount, "record inserted.")
+                            cursor.execute(sql, values)
+                            conn.commit()
+                            print(f"Inserted house with ID {address_id}.")
 
                         cursor.close()
                         conn.close()
