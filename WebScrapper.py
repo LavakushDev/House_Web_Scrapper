@@ -3,7 +3,14 @@ from bs4 import BeautifulSoup
 import time
 import re
 import mysql.connector
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
+host = os.getenv("DB_HOST")
+user = os.getenv("DB_USER")
+password = os.getenv("DB_PASSWORD")
+database = os.getenv("DB_DATABASE")
 
 base_url = "https://reiwa.com.au/for-sale/broadwood+karlkurla+binduli+hannans+kalgoorlie+boulder+fimiston+south-boulder+victory-heights/?includesurroundingsuburbs=true&sortby=listdate&page="
 headers = {
@@ -45,12 +52,11 @@ for page in range(1, 25):
 
                         print(f"Address: {address}, Price: {price}, Link: {full_link}")
                         conn = mysql.connector.connect(
-                        host="192.168.1.108",  
-                        user="myuser",
-                        password="mypassword",
-                        database="Houses_Scrapper"
-                        )
-
+                                    host=host,
+                                    user=user,
+                                    password=password,
+                                    database=database
+                                )
                         cursor = conn.cursor()
 
                         cursor.execute("Select * from Houses_List where house_id="+address_id)
